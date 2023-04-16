@@ -6,11 +6,14 @@ import flixel.math.FlxPoint;
 
 class Player extends FlxSprite
 {
-	static var SPEED:Float = 150;
-	static var DEACCEL:Float = 10;
+	static var SPEED:Float = 200;
+	static var DEACCEL:Float = 125;
 
-	public var doCollision:Bool;
+	public var doDrag:Bool;
 	public var touchingWall:Bool = true;
+
+	private var travelDirection:Float;
+	private var travelVelocity:FlxPoint;
 
 	override public function new(X:Float, Y:Float)
 	{
@@ -24,26 +27,49 @@ class Player extends FlxSprite
 		{
 			takeoff();
 		}
+		if (doDrag)
+		{
+			if (travelVelocity.x > 0)
+			{
+				drag.x = travelVelocity.x;
+			}
+			else
+			{
+				drag.x = travelVelocity.x * -1;
+			}
+			if (travelVelocity.y > 0)
+			{
+				drag.y = travelVelocity.y;
+			}
+			else
+			{
+				drag.y = travelVelocity.y * -1;
+			}
+			drag.scale(DEACCEL);
+		}
+		else
+		{
+			drag = FlxPoint.weak(0, 0);
+		}
 	}
 
 	public function hitWall()
 	{
 		touchingWall = true;
-		drag = FlxPoint.weak(SPEED, SPEED).rotateByDegrees(angle);
-		velocity = FlxPoint.weak(1, 1).rotateByDegrees(angle).scale(DEACCEL);
+		doDrag = true;
+		velocity = velocity * -1;
 	}
 
 	public function takeoff()
 	{
 		if (touchingWall)
 		{
-			drag = FlxPoint.get(0, 0);
-			doCollision = false;
-			var dummyVel = FlxPoint.weak(1, 0);
+			doDrag = false;
+			travelDirection = this.getMidpoint().degreesTo(FlxG.mouse.getPosition());
 
-			velocity = dummyVel.rotateByDegrees(this.getMidpoint().degreesTo(FlxG.mouse.getPosition())).scale(SPEED);
+			velocity = FlxPoint.weak(1, 0).rotateByDegrees(travelDirection).scale(SPEED);
+			travelVelocity = velocity;
 			touchingWall = false;
-			drag.put();
 		}
 	}
 }
