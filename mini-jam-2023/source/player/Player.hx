@@ -7,12 +7,13 @@ import flixel.math.FlxPoint;
 class Player extends FlxSprite
 {
 	static var SPEED:Float = 150;
-	static var DEACCEL:Float = -25;
+	static var DEACCEL:Float = 125;
 
 	public var doDrag:Bool;
 	public var touchingWall:Bool = true;
 
 	private var travelDirection:Float;
+	private var travelVelocity:FlxPoint;
 
 	override public function new(X:Float, Y:Float)
 	{
@@ -28,15 +29,23 @@ class Player extends FlxSprite
 		}
 		if (doDrag)
 		{
-			drag = FlxPoint.get(SPEED, SPEED).rotateByDegrees(travelDirection);
-			if (drag.x < 0)
+			if (travelVelocity.x > 0)
 			{
-				drag.x *= -1;
+				drag.x = travelVelocity.x;
 			}
-			if (drag.y < 0)
+			else
 			{
-				drag.y *= -1;
+				drag.x = travelVelocity.x * -1;
 			}
+			if (travelVelocity.y > 0)
+			{
+				drag.y = travelVelocity.y;
+			}
+			else
+			{
+				drag.y = travelVelocity.y * -1;
+			}
+			drag.scale(DEACCEL);
 		}
 		else
 		{
@@ -48,7 +57,7 @@ class Player extends FlxSprite
 	{
 		touchingWall = true;
 		doDrag = true;
-		velocity = FlxPoint.get(1, 1).rotateByDegrees(travelDirection).scale(DEACCEL);
+		velocity = velocity * -1;
 	}
 
 	public function takeoff()
@@ -59,6 +68,7 @@ class Player extends FlxSprite
 			travelDirection = this.getMidpoint().degreesTo(FlxG.mouse.getPosition());
 
 			velocity = FlxPoint.weak(1, 0).rotateByDegrees(travelDirection).scale(SPEED);
+			travelVelocity = velocity;
 			touchingWall = false;
 		}
 	}

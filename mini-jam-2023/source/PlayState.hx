@@ -1,7 +1,6 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxCollision;
@@ -55,6 +54,7 @@ class PlayState extends FlxState
 	{
 		playerChar = new Player(FlxG.width / 2, FlxG.height / 2);
 		add(playerChar);
+		FlxG.watch.add(playerChar, "drag");
 	}
 
 	private function initScreenSizeObjects()
@@ -62,8 +62,8 @@ class PlayState extends FlxState
 		walls = new ScreenSizeObject(AssetPaths.rocketCollision__png);
 		background = new ScreenSizeObject(AssetPaths.background__png);
 
-		add(background);
 		add(walls);
+		add(background);
 	}
 
 	private function initTimers()
