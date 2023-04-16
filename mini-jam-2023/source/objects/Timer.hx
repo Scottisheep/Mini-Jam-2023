@@ -10,12 +10,13 @@ class Timer extends FlxSprite
 	public static var FAILS:Int = 0;
 	public static var SUCCESSES:Int = 0;
 
-	private static var TIMER_MINIMUM:Int = 5;
-	private static var TIMER_MAXIMUM:Int = 25;
+	private static var TIMER_MINIMUM:Int = 15;
+	private static var TIMER_MAXIMUM:Int = 45;
 
 	private var counting:Bool = false;
 	private var timerJustFinished:Bool = false;
 	private var breaking:Bool = false;
+	private var timerOffset:Float;
 
 	private var countdownTimer:FlxTimer = new FlxTimer();
 
@@ -23,9 +24,10 @@ class Timer extends FlxSprite
 
 	private var randomizer:FlxRandom = new FlxRandom();
 
-	override public function new(X:Float, Y:Float)
+	override public function new(X:Float, Y:Float, offset:Float)
 	{
 		super(X, Y);
+		timerOffset = offset;
 		loadGraphic(AssetPaths.timer__png, true);
 		setGraphicSize(TIMER_SIZE, TIMER_SIZE);
 		updateHitbox();
@@ -58,7 +60,7 @@ class Timer extends FlxSprite
 	{
 		timerJustFinished = true;
 		counting = true;
-		countdownTimer.start(10);
+		countdownTimer.start(11);
 		this.animation.play("countdown");
 	}
 
@@ -66,7 +68,7 @@ class Timer extends FlxSprite
 	{
 		if (breaking == false)
 		{
-			breakingTimer.start(randomizer.float(TIMER_MINIMUM, TIMER_MAXIMUM));
+			breakingTimer.start(randomizer.float(TIMER_MINIMUM, TIMER_MAXIMUM) + timerOffset);
 
 			breaking = true;
 		}

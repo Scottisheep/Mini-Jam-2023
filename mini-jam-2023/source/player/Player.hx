@@ -6,7 +6,7 @@ import flixel.math.FlxPoint;
 
 class Player extends FlxSprite
 {
-	static var SPEED:Float = 150;
+	static var SPEED:Float = 200;
 	static var DEACCEL:Float = 125;
 
 	public var doDrag:Bool;

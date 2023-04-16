@@ -69,10 +69,10 @@ class PlayState extends FlxState
 	private function initTimers()
 	{
 		timerList = new FlxTypedGroup<Timer>(4);
-		timer1 = new Timer(FlxG.width * (6 / 7) - (Timer.TIMER_SIZE / 2), (FlxG.height / 2) - (Timer.TIMER_SIZE / 2));
-		timer2 = new Timer((FlxG.width * (2 / 5)) - (Timer.TIMER_SIZE / 2), ((FlxG.height * (5 / 6)) - (Timer.TIMER_SIZE / 2)));
-		timer3 = new Timer((FlxG.width * (2 / 5)) - (Timer.TIMER_SIZE / 2), (FlxG.height / 6) - (Timer.TIMER_SIZE / 2));
-		timer4 = new Timer((FlxG.width * (2 / 9)) - (Timer.TIMER_SIZE / 2), (FlxG.height / 2) - (Timer.TIMER_SIZE / 2));
+		timer1 = new Timer(FlxG.width * (6 / 7) - (Timer.TIMER_SIZE / 2), (FlxG.height / 2) - (Timer.TIMER_SIZE / 2), -15);
+		timer2 = new Timer((FlxG.width * (2 / 5)) - (Timer.TIMER_SIZE / 2), ((FlxG.height * (5 / 6)) - (Timer.TIMER_SIZE / 2)), -5);
+		timer3 = new Timer((FlxG.width * (2 / 5)) - (Timer.TIMER_SIZE / 2), (FlxG.height / 6) - (Timer.TIMER_SIZE / 2), 5);
+		timer4 = new Timer((FlxG.width * (2 / 9)) - (Timer.TIMER_SIZE / 2), (FlxG.height / 2) - (Timer.TIMER_SIZE / 2), 15);
 
 		timerList.add(timer1);
 		timerList.add(timer2);
