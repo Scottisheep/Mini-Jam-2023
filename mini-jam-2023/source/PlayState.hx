@@ -1,35 +1,32 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
+import flixel.FlxObject;
 import flixel.FlxState;
-import flixel.util.FlxColor;
-import objects.Background;
-import objects.Wall;
+import flixel.util.FlxCollision;
+import objects.ScreenSizeObject;
 import player.Player;
 
 class PlayState extends FlxState
 {
 	private var playerChar:Player;
-	private var wall:Wall;
-	private var background:Background = new Background(0, 0);
+	private var background:ScreenSizeObject;
+	private var walls:ScreenSizeObject;
 
 	override public function create()
 	{
-		add(background);
-		background.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
 		super.create();
+		initScreenSizeObjects();
 		initPlayer();
-		initWall();
 		FlxG.watch.add(playerChar, "touchingWall");
 	}
 
 	override public function update(elapsed:Float)
 	{
-		FlxG.overlap(playerChar, wall, function onOverlap(player, wall)
+		if (FlxCollision.pixelPerfectCheck(playerChar, walls))
 		{
 			playerChar.hitWall();
-		});
+		}
 
 		super.update(elapsed);
 	}
@@ -40,9 +37,12 @@ class PlayState extends FlxState
 		add(playerChar);
 	}
 
-	private function initWall()
+	private function initScreenSizeObjects()
 	{
-		wall = new Wall(0, 0);
-		add(wall);
+		walls = new ScreenSizeObject(AssetPaths.rocketCollision__png);
+		background = new ScreenSizeObject(AssetPaths.background__png);
+
+		add(walls);
+		add(background);
 	}
 }
