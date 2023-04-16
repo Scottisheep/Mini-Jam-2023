@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.util.FlxCollision;
+import flixel.util.FlxColor;
 import objects.ScreenSizeObject;
 import player.Player;
 
@@ -19,6 +20,9 @@ class PlayState extends FlxState
 		initScreenSizeObjects();
 		initPlayer();
 		FlxG.watch.add(playerChar, "touchingWall");
+		FlxG.watch.add(playerChar, "drag");
+		FlxG.watch.add(playerChar, "velocity");
+		FlxG.watch.add(playerChar, "angle");
 	}
 
 	override public function update(elapsed:Float)
@@ -42,7 +46,7 @@ class PlayState extends FlxState
 		walls = new ScreenSizeObject(AssetPaths.rocketCollision__png);
 		background = new ScreenSizeObject(AssetPaths.background__png);
 
-		add(walls);
 		add(background);
+		add(walls);
 	}
 }
