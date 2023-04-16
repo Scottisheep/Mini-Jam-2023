@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxCollision;
@@ -37,6 +38,14 @@ class PlayState extends FlxState
 		if (FlxG.keys.justPressed.C)
 		{
 			timer1.startCountdown();
+		}
+
+		for (t in timerList)
+		{
+			if (FlxG.overlap(t, playerChar) && FlxG.keys.pressed.SPACE)
+			{
+				t.avertDisaster();
+			}
 		}
 
 		super.update(elapsed);
