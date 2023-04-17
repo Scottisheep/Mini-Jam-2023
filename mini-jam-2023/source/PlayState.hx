@@ -4,20 +4,23 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxCollision;
+import objects.Background;
 import objects.ScreenSizeObject;
+import objects.StatusBar;
 import objects.Timer;
 import player.Player;
 
 class PlayState extends FlxState
 {
 	private var playerChar:Player;
-	private var background:ScreenSizeObject;
+	private var background:Background;
 	private var walls:ScreenSizeObject;
 	private var timer1:Timer;
 	private var timer2:Timer;
 	private var timer3:Timer;
 	private var timer4:Timer;
 	private var timerList:FlxTypedGroup<Timer>;
+	private var statBar:StatusBar;
 
 	override public function create()
 	{
@@ -25,6 +28,7 @@ class PlayState extends FlxState
 		initScreenSizeObjects();
 		initTimers();
 		initPlayer();
+		initStatusBar();
 	}
 
 	override public function update(elapsed:Float)
@@ -47,6 +51,14 @@ class PlayState extends FlxState
 			}
 		}
 
+		statBar.checkAlertLevel(Timer.FAILS);
+		background.checkFails(Timer.FAILS);
+
+		if (Timer.FAILS >= 3)
+		{
+			gameOver();
+		}
+
 		super.update(elapsed);
 	}
 
@@ -60,7 +72,7 @@ class PlayState extends FlxState
 	private function initScreenSizeObjects()
 	{
 		walls = new ScreenSizeObject(AssetPaths.rocketCollision__png);
-		background = new ScreenSizeObject(AssetPaths.background__png);
+		background = new Background(AssetPaths.background1__png);
 
 		add(walls);
 		add(background);
@@ -79,6 +91,29 @@ class PlayState extends FlxState
 		timerList.add(timer3);
 		timerList.add(timer4);
 
+		FlxG.watch.add(timer1, "breaking");
+		FlxG.watch.add(timer1, "counting");
+		FlxG.watch.add(timer1, "breakTimeMin");
+		FlxG.watch.add(timer1, "breakTimeMax");
+		FlxG.watch.add(timer1, "timeToBreak");
+		FlxG.watch.add(timer1.breakingTimer, "timeLeft");
+
 		add(timerList);
+	}
+
+	private function initStatusBar()
+	{
+		statBar = new StatusBar();
+		add(statBar);
+	}
+
+	private function gameOver()
+	{
+		playerChar.kill();
+
+		for (t in timerList)
+		{
+			t.kill();
+		}
 	}
 }
