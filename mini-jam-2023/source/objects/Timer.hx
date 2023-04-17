@@ -10,13 +10,19 @@ class Timer extends FlxSprite
 	public static var FAILS:Int = 0;
 	public static var SUCCESSES:Int = 0;
 
-	private static var TIMER_MINIMUM:Int = 15;
-	private static var TIMER_MAXIMUM:Int = 45;
+	private static var TIMER_MODIFIER:Int = 2;
+	private static var TIMER_MINIMUM:Int = 5;
+	private static var TIMER_MAXIMUM:Int = 20;
 
 	private var counting:Bool = false;
 	private var timerJustFinished:Bool = false;
 	private var breaking:Bool = false;
 	private var timerOffset:Float;
+	private var success:Bool = false;
+
+	private var timeToBreak:Float;
+	private var breakTimeMin:Float;
+	private var breakTimeMax:Float;
 
 	private var countdownTimer:FlxTimer = new FlxTimer();
 
@@ -38,7 +44,7 @@ class Timer extends FlxSprite
 
 	override public function update(elapsed:Float)
 	{
-		if (countdownTimer.finished && timerJustFinished)
+		if (countdownTimer.finished && timerJustFinished && success == false)
 		{
 			this.animation.play("idle");
 			timerJustFinished = false;
@@ -51,6 +57,8 @@ class Timer extends FlxSprite
 
 	public function avertDisaster()
 	{
+		success = true;
+		counting = false;
 		countdownTimer.cancel();
 		this.animation.play("idle");
 		SUCCESSES++;
@@ -58,9 +66,10 @@ class Timer extends FlxSprite
 
 	public function startCountdown()
 	{
+		success = false;
 		timerJustFinished = true;
 		counting = true;
-		countdownTimer.start(11);
+		countdownTimer.start(10.5);
 		this.animation.play("countdown");
 	}
 
@@ -68,7 +77,10 @@ class Timer extends FlxSprite
 	{
 		if (breaking == false)
 		{
-			breakingTimer.start(randomizer.float(TIMER_MINIMUM, TIMER_MAXIMUM) + timerOffset);
+			breakTimeMin = TIMER_MINIMUM * (TIMER_MODIFIER / (SUCCESSES + 1));
+			breakTimeMax = (TIMER_MAXIMUM * (TIMER_MODIFIER / (SUCCESSES + 1))) + timerOffset;
+			timeToBreak = randomizer.float(breakTimeMin, breakTimeMax);
+			breakingTimer.start(timeToBreak);
 
 			breaking = true;
 		}
